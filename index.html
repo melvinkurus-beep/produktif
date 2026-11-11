@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VOID — Komunitas Gaming & Discord</title>
+  <meta name="description" content="VOID adalah server Discord untuk gamer: komunitas aktif, bot & game custom, event rutin, dan voice channel santai.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{display:['Syncopate','sans-serif']}}}}</script>
+  <style>
+    :root{--glow:rgba(255,255,255,.55)}
+    html,body{background:#000;color:#fff}
+    body{font-family:'Space Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    #stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+    .vignette{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 50% 35%,rgba(255,255,255,.06),transparent 55%),radial-gradient(ellipse at center,transparent 40%,#000 100%)}
+    main,header,footer{position:relative;z-index:1}
+    .void-logo{font-family:'Syncopate',sans-serif;font-weight:700;color:#fff;letter-spacing:.12em;
+      text-shadow:0 0 2px #fff,0 0 14px var(--glow),0 0 42px rgba(255,255,255,.28),6px 6px 0 rgba(255,255,255,.14)}
+    .logo-live{animation:flicker 7s infinite,pulse 4s ease-in-out infinite}
+    @keyframes flicker{0%,92%,100%{opacity:1}93%{opacity:.72}94%{opacity:1}96%{opacity:.85}97%{opacity:1}}
+    @keyframes pulse{0%,100%{text-shadow:0 0 2px #fff,0 0 14px var(--glow),0 0 42px rgba(255,255,255,.28),6px 6px 0 rgba(255,255,255,.14)}
+      50%{text-shadow:0 0 3px #fff,0 0 26px rgba(255,255,255,.8),0 0 80px rgba(255,255,255,.4),6px 6px 0 rgba(255,255,255,.22)}}
+    .logo-canvas{filter:drop-shadow(0 0 14px rgba(255,255,255,.55)) drop-shadow(0 0 40px rgba(255,255,255,.25));max-width:100%}
+    .btn-glow{box-shadow:0 0 0 1px #fff,0 0 24px rgba(255,255,255,.35);transition:box-shadow .25s,transform .25s,background .25s,color .25s}
+    .btn-glow:hover{box-shadow:0 0 0 1px #fff,0 0 48px rgba(255,255,255,.6);transform:translateY(-2px)}
+    .card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(6px);transition:border-color .3s,background .3s,box-shadow .3s}
+    .card:hover{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.05);box-shadow:0 0 30px rgba(255,255,255,.08)}
+    a:focus-visible,button:focus-visible{outline:2px solid #fff;outline-offset:4px}
+    ::selection{background:#fff;color:#000}
+    .nav-link{position:relative;color:rgba(255,255,255,.65);transition:color .2s}
+    .nav-link:hover{color:#fff}
+    .nav-link::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:1px;background:#fff;transform:scaleX(0);transition:transform .25s}
+    .nav-link:hover::after{transform:scaleX(1)}
+    .hero-in{animation:heroIn 1.2s cubic-bezier(.2,.7,.2,1) both}
+    @keyframes heroIn{from{opacity:0;filter:blur(12px)}to{opacity:1;filter:blur(0)}}
+    @media (prefers-reduced-motion:reduce){.logo-live,.hero-in{animation:none!important}*{transition-duration:.01ms!important}}
+  </style>
+</head>
+<body class="min-h-screen">
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header class="fixed top-0 inset-x-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-md">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8" aria-label="Navigasi utama">
+      <a href="#home" id="navName" class="void-logo text-xl md:text-2xl"></a>
+      <ul id="navLinks" class="hidden items-center gap-10 text-sm md:flex"></ul>
+      <div class="flex items-center gap-3">
+        <a data-invite id="navCta" target="_blank" rel="noopener" class="btn-glow hidden rounded-full bg-white px-5 py-2 text-sm font-semibold text-black hover:bg-black hover:text-white md:inline-block"></a>
+        <button id="menuBtn" class="rounded-md border border-white/20 p-2 md:hidden" aria-label="Buka menu" aria-expanded="false" aria-controls="mobileMenu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </nav>
+    <div id="mobileMenu" class="hidden border-t border-white/10 bg-black/90 px-5 py-5 md:hidden"><ul id="mobileLinks" class="flex flex-col gap-4"></ul></div>
+  </header>
+
+  <main>
+    <section id="home" class="flex min-h-screen flex-col items-center justify-center px-5 pt-24 pb-16 text-center">
+      <h1 id="logo" class="void-logo logo-live hero-in text-[22vw] leading-none sm:text-[16vw] lg:text-[200px]"></h1>
+      <p id="tagline" class="mt-10 max-w-xl text-lg font-light leading-relaxed text-white/70 md:text-xl"></p>
+      <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row">
+        <a data-invite id="ctaPrimary" target="_blank" rel="noopener" class="btn-glow rounded-full bg-white px-9 py-4 font-semibold text-black hover:bg-black hover:text-white"></a>
+        <a id="ctaSecondary" href="#features" class="rounded-full border border-white/30 px-9 py-4 text-white/80 transition hover:border-white hover:text-white"></a>
+      </div>
+    </section>
+
+    <section id="about" class="mx-auto max-w-4xl px-5 py-24 text-center md:px-8">
+      <h2 id="aboutTitle" class="font-display text-2xl font-bold tracking-wider md:text-4xl"></h2>
+      <p id="aboutText" class="mx-auto mt-8 max-w-2xl text-lg font-light leading-relaxed text-white/65"></p>
+    </section>
+
+    <section id="features" class="mx-auto max-w-7xl px-5 py-24 md:px-8">
+      <h2 id="featuresTitle" class="text-center font-display text-2xl font-bold tracking-wider md:text-4xl"></h2>
+      <div id="featureGrid" class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"></div>
+    </section>
+
+    <section id="community" class="mx-auto max-w-6xl px-5 py-24 md:px-8">
+      <div class="card rounded-3xl px-6 py-14 md:px-14">
+        <h2 id="statsTitle" class="text-center font-display text-2xl font-bold tracking-wider md:text-4xl"></h2>
+        <dl id="statGrid" class="mt-14 grid grid-cols-2 gap-10 text-center md:grid-cols-4"></dl>
+        <div class="mt-14 text-center">
+          <a data-invite id="statsCta" target="_blank" rel="noopener" class="btn-glow inline-block rounded-full bg-white px-9 py-4 font-semibold text-black hover:bg-black hover:text-white"></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/10 bg-black/60">
+    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-5 py-10 md:flex-row md:px-8">
+      <div class="text-center md:text-left">
+        <a href="#home" id="footName" class="void-logo text-xl"></a>
+        <p id="footTag" class="mt-2 text-sm text-white/50"></p>
+      </div>
+      <ul id="socialList" class="flex items-center gap-5" aria-label="Sosial media"></ul>
+      <p id="copy" class="text-sm text-white/40"></p>
+    </div>
+  </footer>
+
+  <script src="content.js"></script>
+  <script>
+  (function () {
+    const D = window.VOID, $ = id => document.getElementById(id);
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const inviteUrl = 'https://discord.gg/' + D.discord.inviteCode;
+
+    const ICON = {
+      users:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.2c2.9.2 5 2.6 5 5.8"/>',
+      bot:'<rect x="5" y="8" width="14" height="11" rx="2"/><path d="M12 8V4M9 13h.01M15 13h.01M9 16.5h6"/><circle cx="12" cy="3.5" r="1"/>',
+      gift:'<rect x="3" y="9" width="18" height="11" rx="1.5"/><path d="M12 9v11M3 13h18"/><path d="M12 9c-2.5 0-4-1-4-2.500S9.500 4 12 9zm0 0c2.500 0 4-1 4-2.500S14.500 4 12 9z"/>',
+      mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/>',
+      discord:'<path d="M20 5a17 17 0 0 0-4-1.300l-.5 1a15 15 0 0 0-5 0l-.5-1A17 17 0 0 0 6 5C3.500 9 3 13 3.500 16.800a17 17 0 0 0 5 2.500l1-1.700c-.6-.2-1.100-.5-1.600-.9l.4-.3a12 12 0 0 0 9.400 0l.4.300c-.5.400-1 .7-1.600.9l1 1.700a17 17 0 0 0 5-2.500C21 12.500 19.700 8.700 20 5zM9.500 14c-.9 0-1.600-.8-1.600-1.800s.7-1.800 1.600-1.800 1.600.8 1.600 1.800-.7 1.800-1.600 1.800zm5 0c-.9 0-1.600-.8-1.600-1.800s.7-1.800 1.600-1.800 1.600.8 1.600 1.800-.7 1.800-1.600 1.800z" fill="currentColor" stroke="none"/>',
+      instagram:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.500" cy="6.500" r=".8" fill="currentColor"/>',
+      youtube:'<rect x="2.500" y="5.500" width="19" height="13" rx="4"/><path d="M10 9.500v5l4.500-2.500z" fill="currentColor"/>',
+      tiktok:'<path d="M14 3v11.500a3.500 3.500 0 1 1-3.500-3.500M14 3c.3 2.500 2 4 4.500 4.200"/>'
+    };
+    const svg = (n, cls, sw) => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw||1.4}" aria-hidden="true">${ICON[n]||''}</svg>`;
+    const fmt = n => n.toLocaleString('id-ID');
+
+    // ---------- Render dari content.js ----------
+    $('navName').textContent = $('footName').textContent = D.name;
+    $('logo').textContent = D.name;
+    $('navLinks').innerHTML = D.nav.map(n => `<li><a href="${n.href}" class="nav-link">${n.label}</a></li>`).join('');
+    $('mobileLinks').innerHTML = D.nav.map(n => `<li><a href="${n.href}" class="block text-white/80">${n.label}</a></li>`).join('');
+    $('navCta').textContent = D.navCta;
+    $('tagline').textContent = D.hero.tagline;
+    $('ctaPrimary').textContent = D.hero.ctaPrimary;
+    $('ctaSecondary').textContent = D.hero.ctaSecondary;
+    $('aboutTitle').textContent = D.about.title;
+    $('aboutText').textContent = D.about.text;
+    $('featuresTitle').textContent = D.featuresTitle;
+    $('featureGrid').innerHTML = D.features.map(f => `
+      <article class="card rounded-2xl p-7">${svg(f.icon,'mb-6 h-9 w-9')}
+        <h3 class="text-lg font-semibold">${f.title}</h3>
+        <p class="mt-3 text-sm leading-relaxed text-white/60">${f.text}</p></article>`).join('');
+    $('statsTitle').textContent = D.stats.title;
+    $('statsCta').textContent = D.stats.cta;
+    $('statGrid').innerHTML = D.stats.items.map((s, i) => `
+      <div><dd class="flex items-center justify-center gap-3 font-display text-3xl font-bold md:text-5xl" style="text-shadow:0 0 18px var(--glow)">
+        ${s.dot ? '<span class="relative flex h-3 w-3" aria-hidden="true"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-70"></span><span class="relative inline-flex h-3 w-3 rounded-full bg-white"></span></span>' : ''}
+        <span><span data-stat="${i}" data-target="${s.value}">0</span>${s.suffix || ''}</span></dd>
+        <dt class="mt-3 text-sm text-white/60">${s.label}</dt></div>`).join('');
+    $('socialList').innerHTML = D.socials.map(s => `<li><a href="${s.url}" target="_blank" rel="noopener" aria-label="${s.name}" class="text-white/60 transition hover:text-white">${svg(s.icon,'h-[22px] w-[22px]',1.6)}</a></li>`).join('');
+    $('footTag').textContent = D.footer.tagline;
+    $('copy').textContent = '© ' + new Date().getFullYear() + ' ' + D.footer.copyright;
+    document.querySelectorAll('[data-invite]').forEach(a => a.href = inviteUrl);
+
+    // ---------- Menu mobile ----------
+    $('menuBtn').onclick = () => { const open = $('mobileMenu').classList.toggle('hidden') === false; $('menuBtn').setAttribute('aria-expanded', open); };
+    $('mobileLinks').onclick = e => { if (e.target.tagName === 'A') $('mobileMenu').classList.add('hidden'); };
+
+    // ---------- Angka statistik (count-up + live Discord) ----------
+    const started = new Set();
+    function countTo(el, to) {
+      const from = +(el.dataset.cur || 0), t0 = performance.now(), dur = reduce ? 1 : 1400;
+      el.dataset.target = to;
+      (function tick(now) {
+        const p = Math.min((now - t0) / dur, 1);
+        const v = Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3)));
+        el.textContent = fmt(v); el.dataset.cur = v;
+        if (p < 1) requestAnimationFrame(tick);
+      })(t0);
+    }
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { started.add(e.target); countTo(e.target, +e.target.dataset.target); io.unobserve(e.target); }
+    }), { threshold: .4 });
+    document.querySelectorAll('[data-stat]').forEach(el => io.observe(el));
+
+    async function refreshLive() {
+      try {
+        const r = await fetch(`https://discord.com/api/v10/invites/${D.discord.inviteCode}?with_counts=true`);
+        if (!r.ok) throw new Error(r.status);
+        const j = await r.json();
+        const live = { members: j.approximate_member_count, online: j.approximate_presence_count };
+        D.stats.items.forEach((s, i) => {
+          if (!s.live || typeof live[s.live] !== 'number') return;
+          const el = document.querySelector(`[data-stat="${i}"]`);
+          el.dataset.target = live[s.live];
+          if (started.has(el)) countTo(el, live[s.live]);
+        });
+      } catch (e) { /* gagal → tetap pakai angka cadangan dari content.js */ }
+    }
+    refreshLive();
+    setInterval(refreshLive, Math.max(30, D.discord.refreshSeconds) * 1000);
+
+    // ---------- Starfield ----------
+    (function () {
+      const c = $('stars'), ctx = c.getContext('2d');
+      let w, h, dpr, stars = [], mx = 0, my = 0;
+      function resize() {
+        dpr = Math.min(devicePixelRatio || 1, 2); w = c.width = innerWidth * dpr; h = c.height = innerHeight * dpr;
+        stars = Array.from({ length: Math.round(innerWidth * innerHeight / 5500) }, () => ({
+          x: Math.random() * w, y: Math.random() * h, r: (Math.random() * 1.2 + .25) * dpr,
+          d: Math.random() * .8 + .2, s: Math.random() * .02 + .004, p: Math.random() * 6.28 }));
+      }
+      function draw(t) {
+        ctx.clearRect(0, 0, w, h);
+        for (const s of stars) {
+          const a = reduce ? .6 : .25 + .75 * Math.abs(Math.sin(t * s.s * .06 + s.p));
+          ctx.beginPath(); ctx.arc(s.x + mx * s.d * 14 * dpr, s.y + my * s.d * 14 * dpr, s.r, 0, 6.283);
+          ctx.fillStyle = `rgba(255,255,255,${a.toFixed(3)})`;
+          ctx.shadowBlur = s.r > 1.1 * dpr ? 8 * dpr : 0; ctx.shadowColor = '#fff'; ctx.fill();
+        }
+        if (!reduce) requestAnimationFrame(draw);
+      }
+      addEventListener('resize', () => { resize(); if (reduce) draw(0); });
+      if (!reduce) addEventListener('pointermove', e => { mx = -(e.clientX / innerWidth - .5); my = -(e.clientY / innerHeight - .5); });
+      resize(); requestAnimationFrame(draw);
+    })();
+
+    // ---------- Logo VOID dari video loop (opsional) ----------
+    async function videoLogo() {
+      const src = D.hero.logoVideo, h1 = $('logo');
+      if (!src || reduce) return;
+      await document.fonts.load('700 100px Syncopate');
+      const fs = parseFloat(getComputedStyle(h1).fontSize), dpr = Math.min(devicePixelRatio || 1, 2);
+      const v = document.createElement('video');
+      Object.assign(v, { src, muted: true, loop: true, playsInline: true, autoplay: true });
+      v.onerror = () => {}; // video gagal → logo glow bawaan tetap tampil
+      v.addEventListener('playing', () => {
+        const cv = document.createElement('canvas'), ctx = cv.getContext('2d');
+        const font = `700 ${fs * dpr}px Syncopate`, ls = .12 * fs * dpr;
+        ctx.font = font; ctx.letterSpacing = ls + 'px';
+        const tw = ctx.measureText(D.name).width, pad = fs * .15 * dpr;
+        cv.width = tw + pad * 2; cv.height = fs * 1.3 * dpr;
+        cv.style.width = cv.width / dpr + 'px'; cv.style.height = cv.height / dpr + 'px';
+        cv.className = 'logo-canvas hero-in'; cv.setAttribute('aria-hidden', 'true');
+        h1.className = 'sr-only'; h1.after(cv);
+        (function frame() {
+          const g = cv.getContext('2d');
+          g.clearRect(0, 0, cv.width, cv.height);
+          g.font = font; g.letterSpacing = ls + 'px'; g.textBaseline = 'middle';
+          g.globalCompositeOperation = 'source-over'; g.fillStyle = '#fff'; g.fillText(D.name, pad, cv.height / 2);
+          g.globalCompositeOperation = 'source-in';
+          const k = Math.max(cv.width / v.videoWidth, cv.height / v.videoHeight), vw = v.videoWidth * k, vh = v.videoHeight * k;
+          g.drawImage(v, (cv.width - vw) / 2, (cv.height - vh) / 2, vw, vh);
+          g.globalCompositeOperation = 'source-over'; g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 1.5 * dpr; g.strokeText(D.name, pad, cv.height / 2);
+          requestAnimationFrame(frame);
+        })();
+      }, { once: true });
+      v.play().catch(() => {});
+    }
+    videoLogo();
+  })();
+  </script>
+</body>
+</html>
